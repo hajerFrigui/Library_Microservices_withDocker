@@ -1,0 +1,56 @@
+version: "3"
+
+services:
+  orders:
+    container_name: orders
+    build:
+      context: ./Orders
+      dockerfile: Dockerfile
+    image: ordersimage:v1
+    networks:
+      - db_network
+    ports:
+      - "7777:7777"
+    depends_on:
+      - db
+
+  customers:
+    container_name: customers
+    build:
+      context: ./Customers
+      dockerfile: Dockerfile
+    image: customersimage:v1
+    networks:
+      - db_network
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+
+  books:
+    container_name: books
+    build:
+      context: ./Books
+      dockerfile: Dockerfile
+    image: booksimage:v1
+    networks:
+      - db_network
+    ports:
+      - "4545:4545"
+    depends_on:
+      - db
+  db:
+    container_name: db
+    image: mongo
+    volumes:
+      - db:/data/db
+      - config:/data/configdb
+    networks:
+      - db_network
+
+networks:
+  db_network:
+
+volumes:
+  db:
+  config:
